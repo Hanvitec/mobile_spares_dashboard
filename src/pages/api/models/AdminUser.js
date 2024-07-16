@@ -5,18 +5,18 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 // Simple User Schema
-const userSchema = new Schema(
+const adminUserSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
   },
   {
-    collection: "user",
+    collection: "admin-user",
     timestamps: true,
   }
 );
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const AdminUser = mongoose.models.AdminUser || mongoose.model("AdminUser", adminUserSchema);
 
-export default User;
+export default AdminUser;

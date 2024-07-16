@@ -1,7 +1,7 @@
 // pages/api/register.js
 import dbConnect from './lib/mongoose';
-import User from './models/Users';
 import bcrypt from 'bcrypt';
+import AdminUser from './models/AdminUser';
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -11,13 +11,13 @@ export default async function handler(req, res) {
       const { username, email, password } = req.body;
 
       // Check if user with the same username already exists
-      const existingUser = await User.findOne({ username });
+      const existingUser = await AdminUser.findOne({ username });
       if (existingUser) {
         return res.status(400).json({ success: false, message: 'Username already exists' });
       }
 
       // Check if user with the same email already exists
-      const existingEmail = await User.findOne({ email });
+      const existingEmail = await AdminUser.findOne({ email });
       if (existingEmail) {
         return res.status(400).json({ success: false, message: 'Email already exists' });
       }
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create a new user
-      const newUser = new User({
+      const newUser = new AdminUser({
         username,
         email,
         password: hashedPassword,
