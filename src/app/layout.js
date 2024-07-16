@@ -1,9 +1,5 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-import SessionProvider from "./components/SessionProvider";
-
-const inter = Inter({ subsets: ["latin"] });
+import ClientLayout from "./ClientLayout";
 
 export const metadata = {
   title: "E-Commerce Dashboard",
@@ -13,17 +9,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <SessionProvider>
-          <nav>
-
-          </nav>
-
-          <main className="">
-            {children}
-          </main>
-          <footer></footer>
-        </SessionProvider>
+      <body>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

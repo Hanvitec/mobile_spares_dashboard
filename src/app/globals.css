@@ -16,3 +16,17 @@
   }
 }
 
+@layer utilities {
+  /* Custom scrollbar styles */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 5px;
+    height: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(100, 99, 99);
+    border-radius: 2px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+  } 
+}
