@@ -1,14 +1,14 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
 import dbConnect from "../lib/mongoose";
-import User from "../models/User";
+import AdminUser from "../models/AdminUser";
 import bcrypt from "bcrypt";
 
 // import jwt from 'jsonwebtoken'
 async function login(credentials) {
   try {
     await dbConnect();
-    const user = await User.findOne({ username: credentials.username });
+    const user = await AdminUser.findOne({ username: credentials.username });
     if (!user) throw new Error("Wrong Credentials");
     const isCorrect = await bcrypt.compare(credentials.password, user.password);
     if (!isCorrect) throw new Error("Wrong Credentials");
