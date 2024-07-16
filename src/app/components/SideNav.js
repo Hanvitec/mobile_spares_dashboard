@@ -26,6 +26,7 @@ const SideNav = () => {
       ],
     },
     
+    
   ];
 
   const pathname = usePathname();
@@ -39,7 +40,7 @@ const SideNav = () => {
     <div className="h-[98vh] w-[18vw] bg-black flex flex-col gap-2 justify-between m-1 rounded-md py-4">
       <div className=" h-[78%]">
         <h1 className="text-white text-center text-[25px] font-[500] flex items-center px-6 py-2 font-serif italic">
-          Admin Dashboard
+          E-commerce Dashboard
         </h1>
         {/* Dashboard menu items */}
         <div className="h-fit overflow-auto scrollbar-thin max-h-[90%]">
