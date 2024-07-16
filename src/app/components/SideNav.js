@@ -25,6 +25,7 @@ const SideNav = () => {
         },
       ],
     },
+    
   ];
 
   const pathname = usePathname();
@@ -35,13 +36,13 @@ const SideNav = () => {
   };
 
   return (
-    <div className="h-[98vh] w-[22vw] bg-black flex flex-col gap-2 justify-between m-1 rounded-md py-4">
-      <div className="">
-        <h1 className="text-white text-[25px] font-[500] flex items-center px-6 py-2 font-serif italic">
+    <div className="h-[98vh] w-[18vw] bg-black flex flex-col gap-2 justify-between m-1 rounded-md py-4">
+      <div className=" h-[78%]">
+        <h1 className="text-white text-center text-[25px] font-[500] flex items-center px-6 py-2 font-serif italic">
           Admin Dashboard
         </h1>
         {/* Dashboard menu items */}
-        <div className="h-fit max-h-[80%]">
+        <div className="h-fit overflow-auto scrollbar-thin max-h-[90%]">
           {links.map((link) => (
             <div key={link.label}>
               <div
@@ -120,12 +121,14 @@ const SideNav = () => {
           ))}
         </div>
       </div>
-      <div
-        className="cursor-pointer "
-        onClick={() => signOut()}
-      >
-        <p className="w-[90%] flex items-center rounded-md font-[700] hover:bg-[#ffffff82] transition-all ease-in-out
-        duration-200 px-4 py-2 bg-white text-black m-2 cursor-pointer"> Sign Out</p>
+      <div className="cursor-pointer " onClick={() => signOut()}>
+        <p
+          className="w-[90%] flex items-center rounded-md font-[700] hover:bg-[#ffffff82] transition-all ease-in-out
+        duration-200 px-4 py-2 bg-white text-black m-2 cursor-pointer"
+        >
+          {" "}
+          Sign Out
+        </p>
       </div>
     </div>
   );

@@ -1,12 +1,5 @@
-"use client"; // Add this line
-
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { usePathname } from "next/navigation"; // This is fine since this is now a client component
-import SessionProvider from "./components/SessionProvider";
-import SideNav from "./components/SideNav";
-
-const inter = Inter({ subsets: ["latin"] });
+import ClientLayout from "./ClientLayout";
 
 export const metadata = {
   title: "E-Commerce Dashboard",
@@ -14,25 +7,10 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const pathname = usePathname();
-
-  // Define the paths where the SideNav should not be rendered
-  const noSideNavPaths = ["/login", "/register", "/404"];
-
-  // Check if the current pathname is in the list of paths where SideNav should not be rendered
-  const shouldRenderSideNav = !noSideNavPaths.includes(pathname);
-
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <SessionProvider>
-          <nav></nav>
-          <main className="flex gap-2">
-            {shouldRenderSideNav && <SideNav />}
-            {children}
-          </main>
-          <footer></footer>
-        </SessionProvider>
+      <body>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
