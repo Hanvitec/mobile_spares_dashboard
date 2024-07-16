@@ -23,6 +23,10 @@ const SideNav = () => {
           label: "Add Products",
           url: "/inventory/add-products",
         },
+        {
+          label: "Update Categories",
+          url: "/inventory/update-categories",
+        },
       ],
     },
     
