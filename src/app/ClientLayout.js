@@ -20,9 +20,9 @@ const ClientLayout = ({ children }) => {
     <div className={inter.className}>
       <SessionProvider>
         <nav></nav>
-        <main className="flex gap-2">
+        <main className={`flex gap-2  ${!shouldRenderSideNav ? 'px-2': 'pl-[19vw] pr-2 '}`}>
           {shouldRenderSideNav && <SideNav />}
-          {children}
+          <div className=" rounded-md my-2 w-full">{children}</div>
         </main>
         <footer></footer>
       </SessionProvider>

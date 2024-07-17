@@ -5,6 +5,7 @@ import dbConnect from "./lib/mongoose";
 import { authOptions } from "./auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 
+
 export default async function handler(req, res) {
   await dbConnect();
   const session = await getServerSession(req, res, authOptions);
