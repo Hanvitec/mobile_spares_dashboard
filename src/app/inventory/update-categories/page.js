@@ -132,9 +132,9 @@ const Page = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen w-[80%] bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen w-full ">
       {/* Categories List */}
-      <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full max-w-5xl mx-auto mt-6">
+      <div className= "p-4 rounded-lg shadow-md w-full max-w-5xl mx-auto ">
         <h2 className="text-lg font-semibold mb-4">Categories</h2>
         {categories.length === 0 ? (
           <p>No categories available.</p>
@@ -168,7 +168,7 @@ const Page = () => {
       {/* Modal for Edit Category */}
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+          <div className="bg-white p-6 rounded-lg h-[80vh] overflow-auto scrollbar-thin shadow-md w-full max-w-lg">
             <h2 className="text-lg font-semibold mb-4">Edit Category</h2>
             <form className="space-y-4" onSubmit={handleUpdate}>
               <div>
