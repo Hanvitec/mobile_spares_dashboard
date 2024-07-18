@@ -11,12 +11,11 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/retrive-products");
+        const response = await fetch("/api/retrieve-products");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
-        console.log("data");
         setProducts(data.products);
       } catch (error) {
         setError(error.message);
@@ -37,6 +36,28 @@ const Products = () => {
 
   const closeModal = () => {
     setSelectedProduct(null);
+  };
+
+  const renderStyledDescription = (description) => {
+    const tagStyles = {
+      h1: "text-3xl font-bold mb-4 underline",
+      h2: "text-2xl font-semibold mb-3 mt-4",
+      p: "text-gray-700 leading-relaxed mb-2",
+      ul: "list-disc ml-6 mb-2",
+      ol: "list-decimal ml-6 mb-2",
+      li: "mb-1",
+    };
+
+    const html = description.replace(/<(\/?)(\w+).*?>/g, (match, end, tag) => {
+      const style = tagStyles[tag.toLowerCase()];
+      if (style) {
+        return `<${end}${tag} class="${style}">`;
+      } else {
+        return match;
+      }
+    });
+
+    return { __html: html };
   };
 
   return (
@@ -67,9 +88,7 @@ const Products = () => {
               <td className="py-2 px-3 border-b">${product.businessPrice}</td>
               <td className="py-2 px-3 border-b">{product.quantity}</td>
               <td className="py-2 px-3 border-b">{product.compatibleBrand}</td>
-              <td className="py-2 px-3 border-b">
-                {product.compatibleProduct}
-              </td>
+              <td className="py-2 px-3 border-b">{product.compatibleProduct}</td>
               <td className="py-2 px-3 border-b">
                 <button
                   onClick={() => openModal(product)}
@@ -90,28 +109,41 @@ const Products = () => {
               {selectedProduct.productName}
             </h2>
             <div
-              dangerouslySetInnerHTML={{
-                __html: selectedProduct.productDescription,
-              }}
+              className="prose"
+              dangerouslySetInnerHTML={renderStyledDescription(selectedProduct.productDescription)}
             />
-            <p>Category: {selectedProduct.productCategory}</p>
-            <p>Sub-Category: {selectedProduct.subCategory}</p>
-            <p>Retail Price: ${selectedProduct.retailPrice}</p>
-            <p>Business Price: ${selectedProduct.businessPrice}</p>
-            <p>Availability: {selectedProduct.quantity}</p>
-            <p>Compatible Brand: {selectedProduct.compatibleBrand}</p>
-            <p>Compatible Product: {selectedProduct.compatibleProduct}</p>
-            <div className="flex flex-wrap">
+            <p className="text-gray-600 mt-4">
+              <span className="font-semibold">Category:</span> {selectedProduct.productCategory}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-semibold">Sub-Category:</span> {selectedProduct.subCategory}
+            </p>
+            <p className="text-gray-600 mt-2">
+              <span className="font-semibold">Retail Price:</span> ${selectedProduct.retailPrice}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-semibold">Business Price:</span> ${selectedProduct.businessPrice}
+            </p>
+            <p className="text-gray-600 mt-2">
+              <span className="font-semibold">Availability:</span> {selectedProduct.quantity}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-semibold">Compatible Brand:</span> {selectedProduct.compatibleBrand}
+            </p>
+            <p className="text-gray-600 mt-2">
+              <span className="font-semibold">Compatible Product:</span> {selectedProduct.compatibleProduct}
+            </p>
 
-            {selectedProduct.images.map((image, index) => (
+            <div className="flex flex-wrap mt-4">
+              {selectedProduct.images.map((image, index) => (
                 <img
                   key={index}
                   src={image}
                   alt={`${selectedProduct.productName} - ${index + 1}`}
                   className="w-1/4 p-1"
                 />
-            ))}
-              </div>
+              ))}
+            </div>
 
             <button
               onClick={closeModal}
@@ -129,7 +161,7 @@ const Products = () => {
 const Modal = ({ onClose, children }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded shadow-lg max-w-xl max-h-[90vh] overflow-y-auto scrollbar-thin ">
+      <div className="bg-white p-4 rounded shadow-lg max-w-xl max-h-[90vh] overflow-y-auto scrollbar-thin relative">
         <button
           onClick={onClose}
           className="absolute top-0 right-0 m-2 text-gray-600 hover:text-gray-800"
