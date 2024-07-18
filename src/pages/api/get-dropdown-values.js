@@ -2,6 +2,7 @@ import dbConnect from "./lib/mongoose";
 import Categories from "./models/Categories";
 import { authOptions } from "./auth/[...nextauth]";
 import { getServerSession } from "next-auth";
+import Brand from "./models/Brand";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -16,12 +17,13 @@ export default async function handler(req, res) {
 
     try {
       const categoriesFromDb = await Categories.find({});
-      res
-        .status(201)
-        .json({
-          message: "Categories fetched and sent as respose",
-          categoriesFromDb,
-        });
+      const brandsFromDb = await Brand.find({});
+
+      res.status(201).json({
+        message: "Categories fetched and sent as respose",
+        categoriesFromDb,
+        brandsFromDb,
+      });
     } catch (error) {
       console.log("Error fetching Dropdown Details: ", error);
       res.status(500).json({ message: "Server Error" });

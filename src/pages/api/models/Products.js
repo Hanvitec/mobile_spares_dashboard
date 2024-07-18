@@ -1,5 +1,26 @@
 import mongoose from "mongoose";
 
+const reviewSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    rating: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
+    },
+    comment: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
 const productSchema = new mongoose.Schema(
   {
     productName: {
@@ -26,10 +47,9 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    availability: {
-      type: String,
-      enum: ["In Stock", "Out of Stock"],
-      default: "In Stock",
+    quantity: {
+      type: Number,
+      required: true,
     },
     compatibleBrand: {
       type: String,
@@ -39,18 +59,22 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    image: {
-      type: String, // Store the image URL or path
-      default: null,
+    images: {
+      type: [String],
+      default: [],
     },
     productCode: {
       type: String,
       required: true,
       unique: true,
     },
+    // reviews: {
+    //   type: [reviewSchema],
+    //   default: [],
+    // },
   },
   {
-    collection: 'product',
+    collection: "product",
     timestamps: true,
   }
 );

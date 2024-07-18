@@ -30,7 +30,7 @@ export const authOptions = {
       async authorize(credentials) {
         try {
           const user = await login(credentials);
-          console.log("This is user: ", user);
+          // console.log("This is user: ", user);
           return user;
           // console.log({credentials});
         } catch (error) {
@@ -46,7 +46,7 @@ export const authOptions = {
         token.email = user.email;
         token.id = user.id;
       }
-      console.log("This is token: ", token);
+      // console.log("This is token: ", token);
       return token;
     },
     async session({ session, token }) {
@@ -55,7 +55,7 @@ export const authOptions = {
         session.user.email = token.email;
         session.user.id = token.id;
       }
-      console.log("This is the session: ", session);
+      // console.log("This is the session: ", session);
       return session;
     },
   },
