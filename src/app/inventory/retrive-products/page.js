@@ -11,11 +11,12 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/retrieve-products");
+        const response = await fetch("/api/retrive-products");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
+        console.log("data");
         setProducts(data.products);
       } catch (error) {
         setError(error.message);
@@ -26,6 +27,7 @@ const Products = () => {
 
     fetchProducts();
   }, []);
+
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
