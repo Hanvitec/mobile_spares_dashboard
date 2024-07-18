@@ -35,6 +35,10 @@ const SideNav = () => {
           label: "Update Brand",
           url: "/inventory/update-brand",
         },
+        {
+          label: "Retrive Products",
+          url: "/inventory/retrive-products",
+        },
       ],
     },
   ];
