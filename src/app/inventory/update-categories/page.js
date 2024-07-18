@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 const Page = () => {
   const [categories, setCategories] = useState([]); // Assuming categories are fetched from API or stored locally
   const [category, setCategory] = useState({ name: "", subcategories: [""] });
-  const [editCategory, setEditCategory] = useState(null); // State to track which category is being edited
+  const [editCategories, seteditCategories] = useState(null); // State to track which category is being edited
   const [modalOpen, setModalOpen] = useState(false); // State to control modal open/close
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Page = () => {
   };
 
   const removeSubcategory = (index) => {
-    if (index === 0) return; // Prevent removing the first subcategory
+    // if (index === 0) return; // Prevent removing the first subcategory
     setCategory((prevState) => ({
       ...prevState,
       subcategories: prevState.subcategories.filter((_, i) => i !== index),
@@ -88,7 +88,7 @@ const Page = () => {
   };
 
   const handleEditClick = (index) => {
-    setEditCategory(index); // Set the index of the category being edited
+    seteditCategories(index); // Set the index of the category being edited
     setModalOpen(true); // Open the modal
     // Populate form fields with the category data
     setCategory({
@@ -100,7 +100,7 @@ const Page = () => {
 
   const handleModalClose = () => {
     setModalOpen(false); // Close the modal
-    setEditCategory(null); // Reset the edit category state
+    seteditCategories(null); // Reset the edit category state
     setCategory({ name: "", subcategories: [""] }); // Clear the form fields
   };
 
@@ -124,10 +124,37 @@ const Page = () => {
 
       // Close the modal and reset state
       setModalOpen(false);
-      setEditCategory(null);
+      seteditCategories(null);
       setCategory({ name: "", subcategories: [""] });
     } catch (error) {
       console.error("Error updating category:", error);
+    }
+  };
+
+  const handleDeleteClick = async (categoryId) => {
+    // if (confirm("Are you sure you want to delete this category?")) 
+    {
+      try {
+        const response = await fetch(`/api/delete-categories?categoryId=${categoryId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: categoryId }),
+        });
+
+        if (response.ok) {
+          console.log("Category deleted successfully");
+          // Update the categories state after deletion
+          setCategories((prevCategories) =>
+            prevCategories.filter((cat) => cat._id !== categoryId)
+          );
+        } else {
+          console.log("Failed to delete category");
+        }
+      } catch (error) {
+        console.error("Error deleting category:", error);
+      }
     }
   };
 
@@ -151,13 +178,22 @@ const Page = () => {
                       ))}
                     </ul>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => handleEditClick(index)}
-                    className="mt-4 px-4 py-2 bg-yellow-500 text-white rounded-md shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-                  >
-                    Edit
-                  </button>
+                  <div className="flex justify-between">
+                    <button
+                      type="button"
+                      onClick={() => handleEditClick(index)}
+                      className="mt-4 px-4 py-2 bg-yellow-500 text-white rounded-md shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteClick(cat._id)}
+                      className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -166,7 +202,7 @@ const Page = () => {
       </div>
 
       {/* Modal for Edit Category */}
-      {modalOpen && (
+      {/* {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg h-[80vh] overflow-auto scrollbar-thin shadow-md w-full max-w-lg">
             <h2 className="text-lg font-semibold mb-4">Edit Category</h2>
@@ -231,7 +267,73 @@ const Page = () => {
             </form>
           </div>
         </div>
-      )}
+      )} */}
+      {modalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="bg-white p-6 rounded-lg h-[80vh] overflow-auto scrollbar-thin shadow-md w-full max-w-lg">
+      <h2 className="text-lg font-semibold mb-4">Edit Category</h2>
+      <form className="space-y-4" onSubmit={handleUpdate}>
+        <div>
+          <label className="block">
+            <span className="text-gray-700">Category Name:</span>
+            <input
+              type="text"
+              value={category.name}
+              onChange={(e) => handleCategoryNameChange(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </label>
+        </div>
+        {category.subcategories.map((sub, subIndex) => (
+          <div key={subIndex} className="flex items-center space-x-2">
+            <label className="block flex-1">
+              <span className="text-gray-700">Subcategory:</span>
+              <input
+                type="text"
+                value={sub}
+                onChange={(e) => handleSubcategoryChange(subIndex, e.target.value)}
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </label>
+            {category.subcategories.length > 0 && (
+              <button
+                type="button"
+                onClick={() => removeSubcategory(subIndex)}
+                className="px-4 mt-7 py-2  bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                -
+              </button>
+            )}
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addSubcategory}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          Add Subcategory
+        </button>
+        <div className="flex justify-end space-x-4">
+          <button
+            type="button"
+            onClick={handleModalClose}
+            className="px-4 py-2 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-indigo-500 text-white rounded-md shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };
