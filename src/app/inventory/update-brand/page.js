@@ -390,7 +390,7 @@ const Page = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`/api/update-brand?brand=${brand.id}`, {
+      const response = await fetch(`/api/get-brands?brand=${brand.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
