@@ -65,7 +65,7 @@ const Products = () => {
               <td className="py-2 px-3 border-b">{product.subCategory}</td>
               <td className="py-2 px-3 border-b">${product.retailPrice}</td>
               <td className="py-2 px-3 border-b">${product.businessPrice}</td>
-              <td className="py-2 px-3 border-b">{product.availability}</td>
+              <td className="py-2 px-3 border-b">{product.quantity}</td>
               <td className="py-2 px-3 border-b">{product.compatibleBrand}</td>
               <td className="py-2 px-3 border-b">
                 {product.compatibleProduct}
@@ -98,16 +98,20 @@ const Products = () => {
             <p>Sub-Category: {selectedProduct.subCategory}</p>
             <p>Retail Price: ${selectedProduct.retailPrice}</p>
             <p>Business Price: ${selectedProduct.businessPrice}</p>
-            <p>Availability: {selectedProduct.availability}</p>
+            <p>Availability: {selectedProduct.quantity}</p>
             <p>Compatible Brand: {selectedProduct.compatibleBrand}</p>
             <p>Compatible Product: {selectedProduct.compatibleProduct}</p>
-            {selectedProduct.image && (
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.productName}
-                width="100"
-              />
-            )}
+            <div className="flex flex-wrap">
+
+            {selectedProduct.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`${selectedProduct.productName} - ${index + 1}`}
+                  className="w-1/4 p-1"
+                />
+            ))}
+              </div>
 
             <button
               onClick={closeModal}
@@ -125,7 +129,7 @@ const Products = () => {
 const Modal = ({ onClose, children }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded shadow-lg max-w-lg w-full">
+      <div className="bg-white p-4 rounded shadow-lg max-w-xl max-h-[90vh] overflow-y-auto scrollbar-thin ">
         <button
           onClick={onClose}
           className="absolute top-0 right-0 m-2 text-gray-600 hover:text-gray-800"
