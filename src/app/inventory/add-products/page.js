@@ -46,7 +46,7 @@ const Page = () => {
     subCategory: "",
     retailPrice: "",
     businessPrice: "",
-    availability: "In Stock",
+    quantity: 0,
     compatibleBrand: "",
     compatibleProduct: "",
     image: null,
@@ -55,11 +55,18 @@ const Page = () => {
 
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [brandProducts, setBrandProducts] = useState([]);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
-      setFormData({ ...formData, [name]: files[0] });
+      const selectedFiles = Array.from(files);
+      if (selectedFiles.length > 5) {
+        toast.error("You can only upload up to 5 images.");
+        return;
+      }
+      setFormData({ ...formData, [name]: selectedFiles });
     } else {
       setFormData({ ...formData, [name]: value });
       if (name === "productCategory") {
@@ -68,6 +75,10 @@ const Page = () => {
           selectedCategory ? selectedCategory.subcategories : []
         );
       }
+      if (name === "compatibleBrand") {
+        const selectedBrand = brands.find((brand) => brand.name === value);
+        setBrandProducts(selectedBrand ? selectedBrand.products : []);
+      }
     }
   };
 
@@ -75,44 +86,26 @@ const Page = () => {
     setFormData({ ...formData, productDescription: value });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-
-  //     const response = await fetch("/api/add-products", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       console.log("Product successfully saved");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting the form:", error);
-  //     // Handle error (e.g., show an error message)
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      console.log("FORM: ", formData);
+      const formDataToSend = new FormData();
+      formData.image.forEach((file, index) => {
+        formDataToSend.append(`image${index}`, file);
+      });
+      formDataToSend.append("data", JSON.stringify(formData));
+
       const response = await fetch("/api/add-products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
-
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
-        toast.success("Product successfully saved");
+        toast.success(data.message);
         // Clear the form
-        console.log('Data saved Succesfully');
+        console.log("Data saved successfully");
         setFormData({
           productName: "",
           productDescription: "",
@@ -120,14 +113,14 @@ const Page = () => {
           subCategory: "",
           retailPrice: "",
           businessPrice: "",
-          availability: "In Stock",
+          quantity: 0,
           compatibleBrand: "",
           compatibleProduct: "",
           image: null,
           productCode: "",
         });
       } else {
-        toast.error("Error saving product");
+        toast.error(data.message);
       }
     } catch (error) {
       console.error("Error submitting the form:", error);
@@ -147,7 +140,9 @@ const Page = () => {
         // console.log("response: ", response);
         if (response.ok) {
           const data = await response.json();
+          // console.log("GET DATA from the database: ", data);
           setCategories([...data.categoriesFromDb]);
+          setBrands([...data.brandsFromDb]);
         }
       } catch (error) {
         console.log("Error while fetching categories");
@@ -156,7 +151,7 @@ const Page = () => {
     getDropdownValues();
   }, []);
 
-  console.log("Categories From Database: ", categories);
+  // console.log("Categories From Database: ", categories);
 
   return (
     <div className="rounded-md p-2 h-[97vh]">
@@ -278,21 +273,21 @@ const Page = () => {
           </div>
           <div className="mb-4">
             <label
-              htmlFor="availability"
+              htmlFor="quantity"
               className="block text-gray-700 font-bold mb-2"
             >
-              Availability
+              Quantity
             </label>
-            <select
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="availability"
-              name="availability"
-              value={formData.availability}
+            <input
+              type="number"
+              name="quantity"
+              id="quantity"
+              placeholder="Enter quantity"
+              value={formData.quantity}
               onChange={handleChange}
-            >
-              <option value="In Stock">In Stock</option>
-              <option value="Out of Stock">Out of Stock</option>
-            </select>
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required
+            />
           </div>
           <div className="mb-4">
             <label
@@ -309,8 +304,11 @@ const Page = () => {
               onChange={handleChange}
             >
               <option value="">Select Compatible Brand</option>
-              <option value="Brand1">Brand 1</option>
-              <option value="Brand2">Brand 2</option>
+              {brands.map((brand) => (
+                <option key={brand._id} value={brand.name}>
+                  {brand.name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
@@ -328,8 +326,11 @@ const Page = () => {
               onChange={handleChange}
             >
               <option value="">Select Compatible Product</option>
-              <option value="Product1">Product 1</option>
-              <option value="Product2">Product 2</option>
+              {brandProducts.map((product) => (
+                <option key={product._id} value={product.productName}>
+                  {product.productName}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
@@ -362,6 +363,8 @@ const Page = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="image"
               name="image"
+              accept="image/*"
+              multiple
               onChange={handleChange}
             />
           </div>

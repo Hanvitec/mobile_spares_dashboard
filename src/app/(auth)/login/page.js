@@ -13,7 +13,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (session) {
       // If user is already logged in, redirect to homepage
-      router.replace("/");
+      router.replace("/dashboard");
     }
   }, [session, router]);
 
