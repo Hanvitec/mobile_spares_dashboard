@@ -24,13 +24,19 @@ const SideNav = () => {
           url: "/inventory/add-products",
         },
         {
+          label: "Add Brand",
+          url: "/inventory/add-brand",
+        },
+        {
           label: "Update Categories",
           url: "/inventory/update-categories",
         },
+        {
+          label: "Update Brand",
+          url: "/inventory/update-brand",
+        },
       ],
     },
-    
-    
   ];
 
   const pathname = usePathname();
