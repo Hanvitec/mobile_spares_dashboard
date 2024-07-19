@@ -468,8 +468,8 @@ const Page = () => {
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-md w-[55vw] max-w-[60vw] max-h-[90vh] overflow-y-auto scrollbar-thin ">
             <h2 className="text-lg font-semibold mb-4">Edit Brand</h2>
             <form className="space-y-4" onSubmit={handleUpdate}>
               <div>

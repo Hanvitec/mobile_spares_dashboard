@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const Products = () => {
@@ -27,7 +28,6 @@ const Products = () => {
 
     fetchProducts();
   }, []);
-
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -90,7 +90,9 @@ const Products = () => {
               <td className="py-2 px-3 border-b">${product.businessPrice}</td>
               <td className="py-2 px-3 border-b">{product.quantity}</td>
               <td className="py-2 px-3 border-b">{product.compatibleBrand}</td>
-              <td className="py-2 px-3 border-b">{product.compatibleProduct}</td>
+              <td className="py-2 px-3 border-b">
+                {product.compatibleProduct}
+              </td>
               <td className="py-2 px-3 border-b">
                 <button
                   onClick={() => openModal(product)}
@@ -112,37 +114,54 @@ const Products = () => {
             </h2>
             <div
               className="prose"
-              dangerouslySetInnerHTML={renderStyledDescription(selectedProduct.productDescription)}
+              dangerouslySetInnerHTML={renderStyledDescription(
+                selectedProduct.productDescription
+              )}
             />
             <p className="text-gray-600 mt-4">
-              <span className="font-semibold">Category:</span> {selectedProduct.productCategory}
+              <span className="font-semibold">Product Code:</span>{" "}
+              {selectedProduct.productCode}
             </p>
+            <p className="text-gray-600 mt-4">
+              <span className="font-semibold">Category:</span>{" "}
+              {selectedProduct.productCategory}
+            </p>
+
             <p className="text-gray-600">
-              <span className="font-semibold">Sub-Category:</span> {selectedProduct.subCategory}
+              <span className="font-semibold">Sub-Category:</span>{" "}
+              {selectedProduct.subCategory}
             </p>
             <p className="text-gray-600 mt-2">
-              <span className="font-semibold">Retail Price:</span> ${selectedProduct.retailPrice}
+              <span className="font-semibold">Retail Price:</span> $
+              {selectedProduct.retailPrice}
             </p>
             <p className="text-gray-600">
-              <span className="font-semibold">Business Price:</span> ${selectedProduct.businessPrice}
+              <span className="font-semibold">Business Price:</span> $
+              {selectedProduct.businessPrice}
             </p>
             <p className="text-gray-600 mt-2">
-              <span className="font-semibold">Availability:</span> {selectedProduct.quantity}
+              <span className="font-semibold">Availability:</span>{" "}
+              {selectedProduct.quantity}
             </p>
             <p className="text-gray-600">
-              <span className="font-semibold">Compatible Brand:</span> {selectedProduct.compatibleBrand}
+              <span className="font-semibold">Compatible Brand:</span>{" "}
+              {selectedProduct.compatibleBrand}
             </p>
             <p className="text-gray-600 mt-2">
-              <span className="font-semibold">Compatible Product:</span> {selectedProduct.compatibleProduct}
+              <span className="font-semibold">Compatible Product:</span>{" "}
+              {selectedProduct.compatibleProduct}
             </p>
 
             <div className="flex flex-wrap mt-4">
               {selectedProduct.images.map((image, index) => (
-                <img
+                <Image
+                  width={200}
+                  height={200}
                   key={index}
                   src={image}
+                  quality={100}
                   alt={`${selectedProduct.productName} - ${index + 1}`}
-                  className="w-1/4 p-1"
+                  // className="w-1/4 p-1"
                 />
               ))}
             </div>
@@ -163,7 +182,7 @@ const Products = () => {
 const Modal = ({ onClose, children }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded shadow-lg max-w-xl max-h-[90vh] overflow-y-auto scrollbar-thin relative">
+      <div className="bg-white p-4 rounded shadow-lg max-w-xl w-[60vw] max-h-[90vh] overflow-y-auto scrollbar-thin relative">
         <button
           onClick={onClose}
           className="absolute top-0 right-0 m-2 text-gray-600 hover:text-gray-800"
