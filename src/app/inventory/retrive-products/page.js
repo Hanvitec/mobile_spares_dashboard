@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const Products = () => {
@@ -94,7 +95,7 @@ const Products = () => {
               <td className="py-2 px-3 border-b">
                 <button
                   onClick={() => openModal(product)}
-                  className="text-blue-500 hover:underline"
+                  className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg "
                 >
                   View
                 </button>
@@ -136,20 +137,21 @@ const Products = () => {
               <span className="font-semibold">Compatible Product:</span> {selectedProduct.compatibleProduct}
             </p>
 
-            <div className="flex flex-wrap mt-4">
+            <div className="flex flex-wrap mt-4 bg-gray-300 px-4 py-2 rounded-md">
               {selectedProduct.images.map((image, index) => (
-                <img
+                <Image
                   key={index}
                   src={image}
                   alt={`${selectedProduct.productName} - ${index + 1}`}
-                  className="w-1/4 p-1"
+                  width={200}
+                  height={200}
                 />
               ))}
             </div>
 
             <button
               onClick={closeModal}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Close
             </button>
@@ -166,7 +168,7 @@ const Modal = ({ onClose, children }) => {
       <div className="bg-white p-4 rounded shadow-lg max-w-xl max-h-[90vh] overflow-y-auto scrollbar-thin relative">
         <button
           onClick={onClose}
-          className="absolute top-0 right-0 m-2 text-gray-600 hover:text-gray-800"
+          className="absolute text-white bg-red-500 text-xl px-2  rounded-sm flex items-center justify-center top-0 right-0 m-2  hover:bg-red-700"
         >
           &times;
         </button>
