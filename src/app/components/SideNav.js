@@ -41,6 +41,11 @@ const SideNav = () => {
         },
       ],
     },
+    {
+      label: "User Management",
+      url: "/user-management",
+      subLinks: [],
+    },
   ];
 
   const pathname = usePathname();
@@ -71,10 +76,10 @@ const SideNav = () => {
                     : ""
                 }`}
               >
-                {link.subLinks.length === 0 ? (
+                {link.subLinks?.length === 0 ? (
                   <Link href={link.url}>
                     <p
-                      className={`w-full h-full mb-2 px-4 py-2 ${
+                      className={`w-full h-full mb-1 mt-2 px-4 py-2 ${
                         pathname === link.url ? "bg-[#ffffffe6] text-black" : ""
                       } rounded-md`}
                     >
