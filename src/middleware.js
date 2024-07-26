@@ -5,5 +5,10 @@ export const config = {
     "/dashboard",
     "/inventory/add-categories",
     "/inventory/add-products",
+    "/inventory/add-brand",
+    "/inventory/update-categories",
+    "/inventory/update-brand",
+    "/inventory/retrive-products",
+    "/user-management",
   ],
 };
