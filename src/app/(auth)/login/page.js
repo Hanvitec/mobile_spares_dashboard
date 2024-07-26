@@ -67,7 +67,7 @@ const LoginPage = () => {
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-2">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
@@ -77,11 +77,18 @@ const LoginPage = () => {
             <input
               id="password"
               type="password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="********"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+          <div className="flex mb-6">
+            <Link href={'/forgot-password'}>
+            <p className="text-blue-500 hover:underline">
+              Forgot Passsword?
+            </p>
+            </Link>
           </div>
           <div className="flex items-center justify-between">
             <button

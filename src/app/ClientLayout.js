@@ -11,7 +11,13 @@ const ClientLayout = ({ children }) => {
   const pathname = usePathname();
 
   // Define the paths where the SideNav should not be rendered
-  const noSideNavPaths = ["/login", "/register", "/404"];
+  const noSideNavPaths = [
+    "/login",
+    "/register",
+    "/404",
+    "/forgot-password",
+    "/reset-password",
+  ];
 
   // Check if the current pathname is in the list of paths where SideNav should not be rendered
   const shouldRenderSideNav = !noSideNavPaths.includes(pathname);
@@ -20,7 +26,11 @@ const ClientLayout = ({ children }) => {
     <div className={inter.className}>
       <SessionProvider>
         <nav></nav>
-        <main className={`flex gap-2  ${!shouldRenderSideNav ? 'px-2': 'pl-[19vw] pr-2 '}`}>
+        <main
+          className={`flex gap-2  ${
+            !shouldRenderSideNav ? "px-2" : "pl-[19vw] pr-2 "
+          }`}
+        >
           {shouldRenderSideNav && <SideNav />}
           <div className=" rounded-md my-2 w-full">{children}</div>
         </main>
