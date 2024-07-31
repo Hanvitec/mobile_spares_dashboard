@@ -68,10 +68,10 @@ const productSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    // reviews: {
-    //   type: [reviewSchema],
-    //   default: [],
-    // },
+    reviews: {
+      type: [reviewSchema],
+      default: [],
+    },
   },
   {
     collection: "product",
