@@ -1,5 +1,7 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const Page = () => {
   const [users, setUsers] = useState([]);
@@ -26,8 +28,15 @@ const Page = () => {
 
   useEffect(() => {
     const filtered = users.filter((user) =>
-      [user.username, user.type, user.userDetails?.mobileNo, user.email, user.userDetails?.permanentAddress?.state]
-        .some(field => field?.toLowerCase().includes(searchQuery.toLowerCase()))
+      [
+        user.username,
+        user.type,
+        user.userDetails?.mobileNo,
+        user.email,
+        user.userDetails?.permanentAddress?.state,
+      ].some((field) =>
+        field?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
     );
     setFilteredUsers(filtered);
   }, [searchQuery, users]);
@@ -40,8 +49,64 @@ const Page = () => {
     setSelectedUser(null);
   };
 
+  const handleToggleApproval = async () => {
+    toast.promise(
+      (async () => {
+        try {
+          const response = await fetch("/api/toggleApproval", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId: selectedUser._id }),
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            // Update the selectedUser state directly
+            setSelectedUser((prevUser) => ({
+              ...prevUser,
+              isValidated: !prevUser.isValidated,
+            }));
+
+            // Update the users list to reflect the change
+            setUsers((prevUsers) =>
+              prevUsers.map((user) =>
+                user._id === selectedUser._id
+                  ? { ...user, isValidated: !user.isValidated }
+                  : user
+              )
+            );
+
+            setFilteredUsers((prevUsers) =>
+              prevUsers.map((user) =>
+                user._id === selectedUser._id
+                  ? { ...user, isValidated: !user.isValidated }
+                  : user
+              )
+            );
+
+            return data.message;
+          } else {
+            throw new Error(data.message);
+          }
+        } catch (error) {
+          throw new Error(
+            "Error while toggling the Approval status: " + error.message
+          );
+        }
+      })(),
+      {
+        loading: "Toggling Approval...",
+        success: (message) => message,
+        error: (error) => error.message,
+      }
+    );
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
+      <Toaster />
       <h1 className="text-4xl font-bold mb-8 text-center">User Management</h1>
 
       <input
@@ -55,13 +120,27 @@ const Page = () => {
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead className="bg-gray-800 text-white">
           <tr>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">S.No.</th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Username</th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Type</th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Mobile Number</th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Email</th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">State</th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">View</th>
+            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+              S.No.
+            </th>
+            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+              Username
+            </th>
+            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+              Type
+            </th>
+            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+              Mobile Number
+            </th>
+            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+              Email
+            </th>
+            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+              State
+            </th>
+            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+              View
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -70,9 +149,13 @@ const Page = () => {
               <td className="py-3 px-4 border-b">{index + 1}</td>
               <td className="py-3 px-4 border-b">{user.username}</td>
               <td className="py-3 px-4 border-b">{user.type}</td>
-              <td className="py-3 px-4 border-b">{user.userDetails?.mobileNo}</td>
+              <td className="py-3 px-4 border-b">
+                {user.userDetails?.mobileNo}
+              </td>
               <td className="py-3 px-4 border-b">{user.email}</td>
-              <td className="py-3 px-4 border-b">{user.userDetails?.permanentAddress?.state}</td>
+              <td className="py-3 px-4 border-b">
+                {user.userDetails?.permanentAddress?.state}
+              </td>
               <td className="py-3 px-4 border-b">
                 <button
                   onClick={() => openModal(user)}
@@ -87,24 +170,80 @@ const Page = () => {
       </table>
 
       {selectedUser && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-black opacity-50 absolute inset-0" onClick={closeModal}></div>
-          <div className="bg-white p-8 rounded-lg shadow-lg z-10 w-full max-w-lg">
+        <div className="fixed inset-0  flex items-center justify-center z-50">
+          <div
+            className="bg-black opacity-50  absolute inset-0"
+            onClick={closeModal}
+          ></div>
+          <div className="bg-white p-8 max-h-[95vh] scrollbar-thin overflow-auto rounded-lg shadow-lg z-10 w-full max-w-lg">
             <h2 className="text-3xl font-semibold mb-6">User Details</h2>
             <div className="space-y-4">
-              <p><strong>Username:</strong> {selectedUser.username}</p>
-              <p><strong>Type:</strong> {selectedUser.type}</p>
-              <p><strong>Mobile Number:</strong> {selectedUser.userDetails?.mobileNo}</p>
-              <p><strong>Email:</strong> {selectedUser.email}</p>
-              <p><strong>Business Name:</strong> {selectedUser.userDetails?.businessName}</p>
-              <p><strong>Address:</strong> {`${selectedUser.userDetails?.permanentAddress?.street}, ${selectedUser.userDetails?.permanentAddress?.city}, ${selectedUser.userDetails?.state}, ${selectedUser.userDetails?.permanentAddress?.pinCode}, ${selectedUser.userDetails?.permanentAddress?.country}`}</p>
+              <p>
+                <strong>Username:</strong> {selectedUser.username}
+              </p>
+              <p>
+                <strong>Type:</strong> {selectedUser.type}
+              </p>
+              <p>
+                <strong>Mobile Number:</strong>{" "}
+                {selectedUser.userDetails?.mobileNo}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedUser.email}
+              </p>
+              {selectedUser.userDetails.businessName && (
+                <p>
+                  <strong>Business Name:</strong>{" "}
+                  {selectedUser.userDetails?.businessName}
+                </p>
+              )}
+              <p>
+                <strong>Address:</strong>{" "}
+                {`${selectedUser.userDetails?.permanentAddress?.street}, ${selectedUser.userDetails?.permanentAddress?.city}, ${selectedUser.userDetails?.permanentAddress?.state}, ${selectedUser.userDetails?.permanentAddress?.pinCode}, ${selectedUser.userDetails?.permanentAddress?.country}`}
+              </p>
             </div>
-            <button
-              onClick={closeModal}
-              className="mt-6 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Close
-            </button>
+            <div className="flex flex-wrap ">
+              <p className=""></p>
+              {selectedUser.images?.length !== 0 &&
+                selectedUser.images?.map((image, index) => {
+                  return (
+                    <Image
+                      key={index}
+                      src={image}
+                      width={150}
+                      height={150}
+                      alt="Approval Image"
+                    />
+                  );
+                })}
+            </div>
+            <div className="mt-6 flex justify-between">
+              {selectedUser.type === 'Business' ? (
+                selectedUser.isValidated ? (
+                  <button
+                    onClick={handleToggleApproval}
+                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                  >
+                    Revoke Approval
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleToggleApproval}
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  >
+                    Approve
+                  </button>
+                )
+              ) : (
+                <p className="text-gray-600">Approval not required for individual users.</p>
+              )}
+              <button
+                onClick={closeModal}
+                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
