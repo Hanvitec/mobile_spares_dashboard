@@ -46,6 +46,11 @@ const SideNav = () => {
       url: "/user-management",
       subLinks: [],
     },
+    {
+      label:'Orders',
+      url:'/orders',
+      subLinks: []
+    }
   ];
 
   const pathname = usePathname();
