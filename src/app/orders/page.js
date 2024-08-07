@@ -101,9 +101,16 @@ const Page = () => {
                 {/* ({order.user.userDetails.businessName}) */}
               </td>
               <td className="py-3 px-4 border-b">
-                {order.products.map((product, index) => (
+                {/* {order.products.map((product, index) => (
                   <div key={index}>{product.product.productName}</div>
-                ))}
+                ))} */}
+                <div className=" text-center w-[60%]  ">
+                  <p className="">
+                  {
+                    order.products.length
+                  }
+                  </p>
+                </div>
               </td>
               <td className="py-3 px-4 border-b">₹{order.totalCost}</td>
               <td className="py-3 px-4 border-b">{order.deliveryStatus}</td>

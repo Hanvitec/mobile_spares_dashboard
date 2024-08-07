@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { CldUploadWidget } from "next-cloudinary";
 const Page = () => {
   const [brands, setBrands] = useState([]);
   const [brand, setBrand] = useState({
@@ -155,24 +156,29 @@ const Page = () => {
                     <h3 className="text-xl font-bold mb-2 text-gray-800">
                       {brand.name}
                     </h3>
-                    <p className="mb-2 max-w-full truncate text-gray-600">
+                    {/* <p className="mb-2 max-w-full truncate text-gray-600">
                       {brand.url}
-                    </p>
-                    <ul className="list-disc list-inside text-gray-600">
+                    </p> */}
+                    <Image
+                      src={brand.url}
+                      width={80}
+                      height={100}
+                      alt="Brand Image"
+                    />
+                    <ul className="list-disc mt-10 flex flex-col list-inside text-gray-600">
                       {brand.products.map((product, productIndex) => (
                         <li
                           key={productIndex}
-                          className="flex items-center space-x-2"
+                          className="flex flex-col space-x-2"
                         >
                           <span>{product.productName}</span>
-                          <div className="w-10 h-10 relative">
-                            {/* <Image
+                          <div className="relative">
+                            <Image
                               src={product.productImageUrl}
                               alt={product.productName}
-                              layout="fill"
-                              objectFit="contain"
-                              className="rounded-md"
-                            /> */}
+                              width={200}
+                              height={400}
+                            />
                           </div>
                         </li>
                       ))}
@@ -220,13 +226,32 @@ const Page = () => {
                 </label>
                 <label className="block mt-4">
                   <span className="text-gray-700">Brand URL:</span>
-                  <input
+                  {/* <input
                     type="text"
                     value={brand.url}
                     onChange={(e) => handleBrandChange("url", e.target.value)}
                     className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
+                  /> */}
                 </label>
+                <CldUploadWidget
+                  uploadPreset="ecommerceImages" // Replace this with your actual upload preset
+                  onSuccess={(e) => handleBrandChange("url", e.info.secure_url)}
+                >
+                  {({ open }) => {
+                    function handleOnClick(e) {
+                      e.preventDefault();
+                      open();
+                    }
+                    return (
+                      <button
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        onClick={handleOnClick}
+                      >
+                        Upload Images
+                      </button>
+                    );
+                  }}
+                </CldUploadWidget>
               </div>
               {brand.products.map((product, productIndex) => (
                 <div key={productIndex} className="flex items-center space-x-4">
@@ -250,7 +275,7 @@ const Page = () => {
                   <div className="flex-1">
                     <label className="block">
                       <span className="text-gray-700">Product Image URL:</span>
-                      <input
+                      {/* <input
                         type="text"
                         value={product.productImageUrl}
                         onChange={(e) =>
@@ -261,8 +286,33 @@ const Page = () => {
                           )
                         }
                         className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      />
+                      /> */}
                     </label>
+                    <CldUploadWidget
+                      uploadPreset="ecommerceImages" // Replace this with your actual upload preset
+                      onSuccess={(e) =>
+                        handleProductChange(
+                          productIndex,
+                          "productImageUrl",
+                          e.info.secure_url
+                        )
+                      }
+                    >
+                      {({ open }) => {
+                        function handleOnClick(e) {
+                          e.preventDefault();
+                          open();
+                        }
+                        return (
+                          <button
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            onClick={handleOnClick}
+                          >
+                            Upload Images
+                          </button>
+                        );
+                      }}
+                    </CldUploadWidget>
                   </div>
                   <button
                     type="button"
