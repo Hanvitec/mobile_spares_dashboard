@@ -129,15 +129,15 @@ const Page = () => {
             <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
               Type
             </th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+            {/* <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
               Mobile Number
-            </th>
+            </th> */}
             <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
               Email
             </th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
+            {/* <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
               State
-            </th>
+            </th> */}
             <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
               View
             </th>
@@ -149,13 +149,13 @@ const Page = () => {
               <td className="py-3 px-4 border-b">{index + 1}</td>
               <td className="py-3 px-4 border-b">{user.username}</td>
               <td className="py-3 px-4 border-b">{user.type}</td>
-              <td className="py-3 px-4 border-b">
+              {/* <td className="py-3 px-4 border-b">
                 {user.userDetails?.mobileNo}
-              </td>
+              </td> */}
               <td className="py-3 px-4 border-b">{user.email}</td>
-              <td className="py-3 px-4 border-b">
+              {/* <td className="py-3 px-4 border-b">
                 {user.userDetails?.permanentAddress?.state}
-              </td>
+              </td> */}
               <td className="py-3 px-4 border-b">
                 <button
                   onClick={() => openModal(user)}
